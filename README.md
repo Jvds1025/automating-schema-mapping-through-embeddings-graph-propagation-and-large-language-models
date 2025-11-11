@@ -2,9 +2,6 @@
 This repository contains the code developed for the thesis “Automating Schema Mapping through Embeddings, Large Language Models, and Graph Propagation.” The project investigates automated methods to map source schema columns to target columns using LoRA fine-tuned embeddings, graph propagation, and prompt-based LLM inference.
 
 **Key Features**
-
-* Data Preparation: Load, preprocess, and create training, validation, and test datasets for schema mapping.
-
 * Embedding Fine-Tuning: Apply LoRA to the Qwen3-Embedding-4B model for parameter-efficient adaptation. The model is trained to minimize cosine similarity loss between paired schema embeddings, allowing similar columns to be closer in the embedding space while dissimilar columns are pushed apart.
 
 * Candidate Generation: Compute pairwise cosine similarity between source and target embeddings to generate potential mappings above a defined threshold.
