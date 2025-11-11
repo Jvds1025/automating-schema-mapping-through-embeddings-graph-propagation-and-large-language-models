@@ -11,9 +11,8 @@ import os
 import psutil
 
 start_time = time.time()
-
-# -----------------------------------------------------------
-# Utility: Memory usage tracker
+# ____________________________________________________________
+# Memory usage tracker
 def print_memory_usage(step_name=""):
     process = psutil.Process(os.getpid())
     cpu_mem_gb = process.memory_info().rss / 1e9
@@ -21,7 +20,7 @@ def print_memory_usage(step_name=""):
     total_mem_gb = cpu_mem_gb + gpu_mem_gb
     print(f"[Memory] {step_name}: CPU={cpu_mem_gb:.2f} GB | GPU={gpu_mem_gb:.2f} GB | Total={total_mem_gb:.2f} GB")
 
-# -----------------------------------------------------------
+# ______________________________________________________________
 # Load model & tokenizer
 tokenizer_embedding = AutoTokenizer.from_pretrained("Qwen/Qwen3-Embedding-4B")
 model_embedding = AutoModel.from_pretrained(
@@ -35,20 +34,20 @@ lora_model_path = "best_model.pt"
 
 print_memory_usage("After loading model/tokenizer")
 
-# -----------------------------------------------------------
+# _________________________________________________________________
 # Load dataset
 print("Loading dataset...")
 dataset = load_dataset("json", data_files="test_augmented.jsonl")["train"]
 df = pd.DataFrame(dataset)
 df = df[300:350]  # optional subset for faster testing
 
-# -----------------------------------------------------------
+# ________________________________________________________________
 # Load LoRA fine-tuned weights
 try:
     model = PeftModel.from_pretrained(model_embedding, lora_model_path)
-    print("✅ Loaded LoRA adapter via PeftModel.")
+    print("Loaded LoRA adapter via PeftModel.")
 except Exception:
-    print("⚠️ Falling back to manual state_dict load...")
+    print("Falling back to manual state_dict load")
     state_dict = torch.load(lora_model_path, map_location=device)
     model_embedding.load_state_dict(state_dict, strict=False)
     model = model_embedding
@@ -58,7 +57,7 @@ model.eval()
 
 print_memory_usage("After loading dataset")
 
-# -----------------------------------------------------------
+# ______________________________________________________________
 # Compute embeddings
 def get_embeddings(texts, batch_size=16):
     all_embeddings = []
@@ -79,14 +78,14 @@ target_embeddings = get_embeddings(df["target"].tolist())
 
 np.save("source_embeddings.npy", source_embeddings)
 np.save("target_embeddings.npy", target_embeddings)
-print("✅ Embeddings saved successfully.")
+print("Embeddings saved successfully.")
 
 end_time = time.time()
 print(f"Total time taken: {end_time - start_time:.2f} seconds")
 
 print_memory_usage("After applying LoRA weights")
 
-# -----------------------------------------------------------
+# ____________________________________________________
 # Reload embeddings (safety)
 source_embeds = np.load("source_embeddings.npy")
 target_embeds = np.load("target_embeddings.npy")
@@ -99,9 +98,9 @@ top_k = 3
 similarity_matrix = cosine_similarity(source_embeds, target_embeds)
 print_memory_usage("After computing similarity matrix")
 
-# -----------------------------------------------------------
-# >>> NEW SECTION: Full Graph Propagation with Endpoint Awareness + Softmax Weighting <<<
-print("\n🔁 Performing full graph propagation with endpoint awareness and softmax weighting...")
+# _____________________________________________________________
+# Full Graph Propagation with Endpoint Awareness + Softmax Weighting 
+print("\n Performing full graph propagation with endpoint awareness and softmax weighting...")
 
 alpha = 0.3  # neighbor similarity influence
 beta = 0.2   # same-endpoint structural influence
@@ -119,13 +118,13 @@ propagated_source_embeddings = []
 for i, s_node in enumerate(source_schema):
     s_endpoint = source_endpoints[i]
 
-    # 🧠 1️⃣ Neighbor propagation using all targets (softmax-weighted)
+    # Neighbor propagation using all targets (softmax-weighted)
     sim_scores = similarity_matrix[i]
     exp_weights = np.exp(sim_scores / temperature)
     weights = exp_weights / (np.sum(exp_weights) + 1e-8)  # softmax normalization
     weighted_avg = np.average(target_embeds, axis=0, weights=weights)
 
-    # 🧩 2️⃣ Endpoint structural propagation (context from same table or data connector)
+    # Endpoint structural propagation (context from same table or data connector)
     same_endpoint_indices = [k for k, ep in enumerate(source_endpoints) if ep == s_endpoint and k != i]
     if same_endpoint_indices:
         same_ep_embeds = np.stack([source_embeds[k] for k in same_endpoint_indices])
@@ -133,7 +132,7 @@ for i, s_node in enumerate(source_schema):
     else:
         endpoint_context = np.zeros_like(source_embeds[i])
 
-    # ⚖️ 3️⃣ Blend components: original + neighbor (semantic) + endpoint (structural)
+    # Blend components: original + neighbor (semantic) + endpoint (structural)
     new_embed = (
         (1 - alpha - beta) * source_embeds[i]
         + alpha * weighted_avg
@@ -144,12 +143,12 @@ for i, s_node in enumerate(source_schema):
 
 propagated_source_embeddings = np.vstack(propagated_source_embeddings)
 
-# 🔄 Recompute similarities after propagation
+# Recompute similarities after propagation
 propagated_similarity_matrix = cosine_similarity(propagated_source_embeddings, target_embeds)
-print("✅ Full graph propagation with softmax weighting complete. Similarity matrix updated.")
+print("Full graph propagation with softmax weighting complete. Similarity matrix updated.")
 print_memory_usage("After full softmax propagation")
 
-# -----------------------------------------------------------
+# _________________________________________________________
 # Build graph with propagated similarities
 G = nx.DiGraph()
 for node in source_schema + target_schema:
@@ -162,7 +161,7 @@ for i, s_node in enumerate(source_schema):
     for t_node, score in top3:
         G.add_edge(s_node, t_node, weight=score)
 
-# -----------------------------------------------------------
+# __________________________________________________________________________________________________
 # Manual user validation
 def offer_user_choice(source_col, options):
     format_option_text = '\n'.join([f"{i+1}. {val}" for i, val in enumerate(options)])
@@ -191,10 +190,10 @@ for u, v, data in G.edges(data=True):
 source_col, target_col = offer_user_choice(cur_source_node, current_dest_options)
 mapping[source_col] = target_col
 
-print(f"\n✅ Final mapping created: {str(mapping)}")
+print(f"\nFinal mapping created: {str(mapping)}")
 print_memory_usage("End of script")
 
-# ✅ EVALUATION SECTION (after user selections)
+# VALUATION SECTION (after user selections)
 
 # Convert user mapping to DataFrame
 df_batch = pd.DataFrame(list(mapping.items()), columns=['source', 'predicted_target_field'])
@@ -223,9 +222,10 @@ Nan_total = df_merged8["predicted_target_field"].isna().sum()
 null_total = (df_merged8["pred_correct"] == 0).sum()
 Nan_division = (Nan_correct / null_total) if Nan_total > 0 else 0.0
 
-print("\n📊 Evaluation Metrics")
+print("\n Evaluation Metrics")
 print(f"Accuracy:       {accuracy:.3f}")
 print(f"Precision:      {precision:.3f}")
 print(f"Recall:         {recall:.3f}")
 print(f"F1 Score:       {f1:.3f}")
 print(f"NaN Division:   {Nan_division:.3f}")
+
