@@ -30,7 +30,7 @@ model_embedding = AutoModel.from_pretrained(
 )
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
 lora_model_path = "best_model.pt"
-# -----------------------------------------------------------
+# ________________________________________________________________________________
 # Load dataset
 print("Loading dataset...")
 dataset = load_dataset("json", data_files="test_augmented.jsonl")["train"]
@@ -74,7 +74,7 @@ target_embeddings = get_embeddings(df["target"].tolist())
 # Save embeddings
 np.save("source_embeddings.npy", source_embeddings)
 np.save("target_embeddings.npy", target_embeddings)
-print("✅ Embeddings saved successfully: source_embeddings.npy and target_embeddings.npy")
+print("Embeddings saved successfully: source_embeddings.npy and target_embeddings.npy")
 
 end_time = time.time()
 print(f"Total time taken: {end_time - start_time:.2f} seconds")
@@ -110,8 +110,7 @@ for i, s_node in enumerate(source_schema):
         #TODO Potentially uncomment?
         # print(f"{s_node} -> {t_node} (similarity: {score:.2f})")
 
-# This part is underneath your for i, s_node in enumerate(source_schema): loop and runs until you start creating the graph with doubtful mappings
-# NOTE: Currently only set up for the confident mappings, let's see if that works first :)
+# ____________________________________________________________________________________________________________
 def offer_user_choice(source_col, options):
     "Simple function that turns the choice of a user in the command line into a dictionary"
     format_option_text = '\n'.join([f"{i+1}. {val}" for i, val in enumerate(options)])
@@ -142,12 +141,10 @@ for u, v, data in G.edges(data=True):
 
     print(f"{u} -> {v} (similarity: {data['weight']:.2f})")
     current_dest_options.append(v)
- 
-# Add in final option as well and print it
-# mapping.append(offer_user_choice(cur_source_node, current_dest_options))
+
 source_col, target_col = offer_user_choice(cur_source_node, current_dest_options)
 mapping[source_col] = target_col
 
-#doubtful mappings
 print(f"\nFinal mapping that was created is: {str(mapping)}")
 print_memory_usage("End of script")
+
