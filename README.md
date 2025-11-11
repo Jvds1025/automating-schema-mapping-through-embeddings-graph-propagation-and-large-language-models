@@ -1,4 +1,4 @@
-# Automating schema-mapping through embedding, large language models and graph propagation
+# Automating schema mapping through embedding, large language models and graph propagation
 This repository contains the code developed for the thesis “Automating Schema Mapping through Embeddings, Large Language Models, and Graph Propagation.” The project investigates automated methods to map source schema columns to target columns using LoRA fine-tuned embeddings, graph propagation, and prompt-based LLM inference.
 
 **Key Features**
