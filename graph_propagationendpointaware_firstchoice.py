@@ -13,7 +13,7 @@ import json
 start_time = time.time()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-print("Loading dataset...")
+print("Loading dataset")
 df = """your dataseet""" 
 
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3-Embedding-4B")
@@ -155,6 +155,7 @@ with open("all_auto_mappings.json", "w", encoding="utf-8") as f:
 
 end_time = time.time()
 print(f"\nTotal time taken: {end_time - start_time:.2f} seconds")
+
 
 
 
