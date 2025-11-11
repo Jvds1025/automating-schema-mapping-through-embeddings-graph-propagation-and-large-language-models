@@ -14,7 +14,7 @@ start_time = time.time()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print("Loading dataset...")
-df = pd.read_csv("cleaned_testset_auto.csv")  # assumes 'source' & 'target' columns
+df = """your dataseet""" 
 
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3-Embedding-4B")
 base_model = AutoModel.from_pretrained(
@@ -144,7 +144,7 @@ print(f"F1 Score:  {f1:.3f}")
 
 # ____________________________________________________________________________
 # Step 4: Print all batch mappings
-print("\n✅ Final dictionary of propagated mappings for all batches:")
+print("\n Final dictionary of propagated mappings for all batches:")
 for batch_name, mapping in all_auto_mappings.items():
     print(f"\n{batch_name}:")
     for s, t in mapping.items():
@@ -155,5 +155,6 @@ with open("all_auto_mappings.json", "w", encoding="utf-8") as f:
 
 end_time = time.time()
 print(f"\nTotal time taken: {end_time - start_time:.2f} seconds")
+
 
 
