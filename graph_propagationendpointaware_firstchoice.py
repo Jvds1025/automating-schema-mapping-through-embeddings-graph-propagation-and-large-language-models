@@ -135,6 +135,12 @@ recall = true_positives / (true_positives + false_negatives + 1e-8)
 f1 = 2 * precision * recall / (precision + recall + 1e-8)
 accuracy = (true_positives + true_negatives) / total
 
+# Correctly skipped | skip accuracy
+Nan_correct = ((df_merged1["pred_correct"] == 0) & (df_merged1["predicted_target_field"].isna())).sum() 
+Nan_total = df_merged1["predicted_target_field"].isna().sum()
+null_total = (df_merged1["pred_correct"] == 0).sum()
+Nan_division = (Nan_correct / null_total) if Nan_total > 0 else 0.0
+
 print(f"Accuracy:  {accuracy:.3f}")
 print(f"Precision: {precision:.3f}")
 print(f"Recall:    {recall:.3f}")
@@ -153,6 +159,7 @@ with open("all_auto_mappings.json", "w", encoding="utf-8") as f:
 
 end_time = time.time()
 print(f"\nTotal time taken: {end_time - start_time:.2f} seconds")
+
 
 
 
