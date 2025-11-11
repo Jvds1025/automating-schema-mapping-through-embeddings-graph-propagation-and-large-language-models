@@ -93,7 +93,7 @@ model.to(device)
 
 for epoch in range(epochs):
 
-    # ===== Training =====
+    # Training
     model.train()
     total_loss = 0
     for batch in train_loader:
@@ -105,7 +105,7 @@ for epoch in range(epochs):
         total_loss += loss.item()
     avg_train_loss = total_loss / len(train_loader)
 
-    # ===== Validation =====
+    # Validation
     model.eval()
     val_loss = 0
     with torch.no_grad():
@@ -117,7 +117,7 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1} | Train Loss: {avg_train_loss:.4f} | Val Loss: {avg_val_loss:.4f}")
 
-    # ===== Early stopping check =====
+    # Early stopping
     if avg_val_loss < best_val_loss:
         best_val_loss = avg_val_loss
         epochs_no_improve = 0
@@ -129,6 +129,7 @@ for epoch in range(epochs):
     if epochs_no_improve >= patience:
         print(f"Early stopping triggered after {epoch+1} epochs.")
         break
+
 
 
 
