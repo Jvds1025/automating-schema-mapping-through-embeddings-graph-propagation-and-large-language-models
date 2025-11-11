@@ -216,10 +216,10 @@ recall = true_positives / (true_positives + false_negatives + 1e-8)
 f1 = 2 * precision * recall / (precision + recall + 1e-8)
 accuracy = (true_positives + true_negatives) / total
 
-# Handle NaN predictions
-Nan_correct = ((df_merged8["pred_correct"] == 0) & (df_merged8["predicted_target_field"].isna())).sum()
-Nan_total = df_merged8["predicted_target_field"].isna().sum()
-null_total = (df_merged8["pred_correct"] == 0).sum()
+# Correctly skipped | Skip accuracy
+Nan_correct = ((df_merged["pred_correct"] == 0) & (df_merged1["predicted_target_field"].isna())).sum() 
+Nan_total = df_merged1["predicted_target_field"].isna().sum()
+null_total = (df_merged1["pred_correct"] == 0).sum()
 Nan_division = (Nan_correct / null_total) if Nan_total > 0 else 0.0
 
 print("\n Evaluation Metrics")
@@ -228,4 +228,5 @@ print(f"Precision:      {precision:.3f}")
 print(f"Recall:         {recall:.3f}")
 print(f"F1 Score:       {f1:.3f}")
 print(f"NaN Division:   {Nan_division:.3f}")
+
 
