@@ -1,5 +1,3 @@
-# Schema Auto-Mapping with Graph Propagation (Embed First + Metrics)
-
 import time
 import numpy as np
 import torch
@@ -95,7 +93,7 @@ for idx, (start, end) in enumerate(batch_ranges):
 
     propagated_source_embeddings = np.vstack(propagated_source_embeddings)
     propagated_similarity_matrix = cosine_similarity(propagated_source_embeddings, target_embeds)
-    print("✅ Propagation complete.")
+    print("Propagation complete.")
 
     # Top-k mappings
     auto_mapping = {}
@@ -155,6 +153,7 @@ with open("all_auto_mappings.json", "w", encoding="utf-8") as f:
 
 end_time = time.time()
 print(f"\nTotal time taken: {end_time - start_time:.2f} seconds")
+
 
 
 
