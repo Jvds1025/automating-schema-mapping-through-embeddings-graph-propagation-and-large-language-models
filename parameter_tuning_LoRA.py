@@ -89,7 +89,7 @@ print("Total configs to try:", len(configs))
 results = []
 
 for cfg in configs:
-    print("\n=== Running config:", cfg)
+    print("\n Running config:", cfg)
 
     # Load fresh base model
     base_model = AutoModel.from_pretrained(
@@ -146,5 +146,6 @@ for cfg in configs:
 
 # Results
 results = sorted(results, key=lambda x: x["val_loss"])
-print("\n===== BEST CONFIG =====")
+print("\nBEST CONFIG")
 print(results[0])
+
