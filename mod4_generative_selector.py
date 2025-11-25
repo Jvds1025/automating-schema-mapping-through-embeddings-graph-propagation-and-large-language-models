@@ -43,9 +43,9 @@ try:
     state_dict = torch.load(lora_model_path, map_location=device)
     base_model.load_state_dict(state_dict, strict=False)
     model = base_model
-    print("✅ Loaded LoRA adapter weights.")
+    print("Loaded LoRA adapter weights.")
 except Exception:
-    print("⚠️ Could not load LoRA weights, using base model.")
+    print("Could not load LoRA weights, using base model.")
     model = base_model
 
 model.to(device)
@@ -243,4 +243,5 @@ print(f"LLM input tokens:         {num_input_tokens}")
 print(f"LLM output tokens:        {num_output_tokens}")
 print(f"TOTAL LLM tokens:         {num_input_tokens + num_output_tokens}")
 print(f"GRAND TOTAL tokens:       {total_tokens + num_input_tokens + num_output_tokens}")
+
 
