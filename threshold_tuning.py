@@ -107,7 +107,7 @@ def evaluate_predictions(pred_dict, df):
         top1 = preds[:1]
         top3 = preds[:3]
 
-        # --- TOP 1 ---
+        #  TOP 1 
         if label == 1:
             if tgt in top1:
                 TP1 += 1
@@ -119,7 +119,7 @@ def evaluate_predictions(pred_dict, df):
             else:
                 TN1 += 1
 
-        # --- TOP 3 ---
+        # TOP 3 
         if label == 1:
             if tgt in top3:
                 TP3 += 1
@@ -207,3 +207,4 @@ print(best_top3)
 # Save results
 tuning_df.to_csv("threshold_tuning_results.csv", index=False)
 print("\nSaved full grid search to threshold_tuning_results.csv")
+
