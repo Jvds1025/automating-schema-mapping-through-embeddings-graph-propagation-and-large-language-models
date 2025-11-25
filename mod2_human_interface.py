@@ -43,9 +43,9 @@ try:
     state_dict = torch.load(lora_model_path, map_location=device)
     base_model.load_state_dict(state_dict, strict=False)
     model = base_model
-    print("✅ Loaded LoRA adapter weights.")
+    print("Loaded LoRA adapter weights.")
 except Exception:
-    print("⚠️ Could not load LoRA weights, using base model.")
+    print("Could not load LoRA weights, using base model.")
     model = base_model
 
 model.to(device)
@@ -191,4 +191,5 @@ end_time = time.time()
 total_time = end_time - start_time
 print(f"Total elapsed time: {total_time:.2f} seconds")
 print_peak_memory_usage("End of script")
+
 print(f"Total tokens used for embeddings: {total_tokens}")
