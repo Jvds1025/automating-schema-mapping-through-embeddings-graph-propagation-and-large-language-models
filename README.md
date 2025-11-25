@@ -10,7 +10,7 @@ This repository contains the code developed for the thesis **“Automating Schem
 * **Candidate Generation:**  
   Compute pairwise cosine similarity between source and target embeddings to generate candidate mappings. Thresholding ensures only high-confidence candidates are considered.  
 
-* **Decoding Strategies:**  
+* **Added models:**  
   * **Graph Propagation:**  
     Refines column-level similarities by leveraging global table-level relationships, reducing false positives and improving identification of non-mappable columns.  
   * **Generative LLM Prompting:**  
