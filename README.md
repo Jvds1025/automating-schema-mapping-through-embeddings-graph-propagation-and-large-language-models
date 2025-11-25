@@ -19,7 +19,7 @@ This repository contains the code developed for the thesis **“Automating Schem
     Provides a semi-automatic configuration to evaluate maximal achievable accuracy and serves as a performance benchmark for automated methods.  
 
 * **Evaluation Metrics:**  
-  Supports **accuracy, precision, recall, and F1-score** for both top-1 and top-3 candidate predictions.  
+  Supports **accuracy, precision, recall, and F1-score** for both top-1 and top-3 candidate predictions. Efficiency metrics are runtime, token-usage and peak memory
 
 * **Utilities:**  
   Includes thresholding, similarity propagation and candidate ranking
