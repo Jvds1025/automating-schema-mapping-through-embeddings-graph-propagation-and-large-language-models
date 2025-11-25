@@ -11,7 +11,7 @@ import sys
 # Define the search space for all three hyperparameters
 ENDPOINT_GRID = np.arange(0.5, 0.9, 0.05) 
 COLUMN_GRID   = np.arange(0.6, 0.9, 0.05)  
-TOP_K_GRID    = [1,2, 3,4, 5, 10, 20]   
+TOP_K_GRID    = [1, 2, 3, 4, 5, 10, 20]   
 
 start_time = time.time()
 
@@ -230,4 +230,5 @@ end_time = time.time()
 total_time = end_time - start_time
 print(f"Total elapsed time: {total_time:.2f} seconds")
 print_peak_memory_usage("End of script")
+
 print(f"Total tokens used for embeddings: {total_tokens}")
