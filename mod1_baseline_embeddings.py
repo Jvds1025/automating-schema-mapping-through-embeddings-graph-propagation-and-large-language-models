@@ -8,7 +8,6 @@ import psutil, os, torch
 
 start_time = time.time()
 
-
 def print_peak_memory_usage(step_name=""):
     process = psutil.Process(os.getpid())
     try:
@@ -24,7 +23,6 @@ def print_peak_memory_usage(step_name=""):
 # reset GPU peak memory tracker after measuring
 if torch.cuda.is_available():
     torch.cuda.reset_peak_memory_stats()
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -97,7 +95,6 @@ print("created all embeddings")
 #Creating cosine similarity scores
 endpoint_sim = cosine_similarity(src_endpoint_embeddings, tgt_endpoint_embeddings)
 column_sim = cosine_similarity(src_column_embeddings, tgt_column_embeddings)
-
 # ____________________________________________
 top_k = 3
 endpoint_threshold = 0.7
@@ -138,7 +135,6 @@ for item in filtered_candidates:
 # Create prediction dictionary
 pred_dict = {item['source']: [t for t, s in item['top_targets']] for item in filtered_candidates}
 print("Dictionary created.")
-
 
 # Initialize counters
 TP_Top1 = FP_Top1 = TN_Top1 = FN_Top1 = 0
@@ -189,4 +185,3 @@ total_time = end_time - start_time
 print(f"Total elapsed time: {total_time:.2f} seconds")
 print_peak_memory_usage("End of script")
 print(f"Total tokens used for embeddings: {total_tokens}")
-
