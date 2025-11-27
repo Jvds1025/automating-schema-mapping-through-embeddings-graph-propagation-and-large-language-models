@@ -62,8 +62,7 @@ df[['tgt_endpoint', 'tgt_column']] = df['target'].apply(lambda x: pd.Series(spli
 
 for col in ['src_endpoint', 'src_column', 'tgt_endpoint', 'tgt_column']:
     df[col] = df[col].replace("None", "UNKNOWN").fillna("UNKNOWN")
-
-
+    
 # Get embeddings 
 total_tokens = 0
 
@@ -80,8 +79,7 @@ def get_embeddings(texts, batch_size=16):
             embeddings = outputs.last_hidden_state.mean(dim=1)
         all_embeddings.append(embeddings.cpu().to(torch.float32).numpy())
     return np.vstack(all_embeddings)
-
-
+    
 # Create embeddings
 src_endpoint_embeddings = get_embeddings(df['src_endpoint'].astype(str).tolist())
 src_column_embeddings   = get_embeddings(df['src_column'].astype(str).tolist())
@@ -93,7 +91,6 @@ print_peak_memory_usage("After embeddings")
 # Raw similarities
 endpoint_sim_raw = cosine_similarity(src_endpoint_embeddings, tgt_endpoint_embeddings)  
 column_sim_raw = cosine_similarity(src_column_embeddings, tgt_column_embeddings)
-
 
 # table-level embeddings & mappings
 
@@ -115,7 +112,6 @@ for idx, name in enumerate(unique_tgt_endpoints):
 
 # Table-level similarity (initial)
 table_sim = cosine_similarity(src_table_embeddings, tgt_table_embeddings)  
-
 
 # TABLE-LEVEL PROPAGATION
 def row_normalize(mat, eps=1e-9):
@@ -165,7 +161,6 @@ for i in range(n):
 print("Endpoint sim mean change:",
       float(np.abs(endpoint_sim_refined - endpoint_sim_raw).mean()))
 
-
 # Column-level blockwise propagation
 from collections import defaultdict
 
@@ -208,26 +203,18 @@ def propagate_column_sim_blockwise_safe(col_sim, src_endpoints, tgt_endpoints, a
 
     return refined
 
-
-
-
 # Run blockwise column propagation
 column_sim_refined = propagate_column_sim_blockwise_safe(column_sim_raw, df['src_endpoint'].tolist(), df['tgt_endpoint'].tolist(), alpha=0.55)
 print("column_sim refined shape:", column_sim_refined.shape)
 print("Column sim mean change:", float(np.abs(column_sim_refined - column_sim_raw).mean()))
 
 print_peak_memory_usage("After propagation refinements")
-
-
 # Combine refined endpoint and column sims into final combined_sim
-
-# weights for combination (tune on dev set)
 w_endpoint = 0.3
 w_column = 0.7
 
 combined_sim_refined = w_endpoint * endpoint_sim_refined + w_column * column_sim_refined
 
-# 
 # Compare to original combined (original used alpha/beta earlier)
 original_combined_sim = 0.3 * endpoint_sim_raw + 0.7 * column_sim_raw
 print("Combined sim mean change:", float(np.abs(combined_sim_refined - original_combined_sim).mean()))
@@ -319,5 +306,3 @@ total_time = end_time - start_time
 print(f"Total elapsed time: {total_time:.2f} seconds")
 print_peak_memory_usage("End of script")
 print(f"Total tokens used for embeddings: {total_tokens}")
-
-
