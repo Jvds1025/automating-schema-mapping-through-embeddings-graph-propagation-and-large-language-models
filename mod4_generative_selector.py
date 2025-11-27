@@ -160,7 +160,6 @@ for item in filtered_candidates:
         "candidates": candidates
     })
 
-
 def build_mapping_prompt(candidate_list, few_shot_examples):
     prompt = (
     "You are an expert data mapping assistant.\n\n"
@@ -178,15 +177,11 @@ def build_mapping_prompt(candidate_list, few_shot_examples):
     "]\n\n"
     "Do not add explanations or any extra text. Include all source fields from the input candidate list."
 )
-
-    
+   
     # Append candidates as JSON
     prompt += json.dumps(candidate_list, indent=2)
-    
     return prompt
-
-    
-
+   
 prompt_text = build_mapping_prompt(llm_candidates, few_shot_examples=[
     {"source": "user_id", "target": "id"},
         
@@ -243,5 +238,3 @@ print(f"LLM input tokens:         {num_input_tokens}")
 print(f"LLM output tokens:        {num_output_tokens}")
 print(f"TOTAL LLM tokens:         {num_input_tokens + num_output_tokens}")
 print(f"GRAND TOTAL tokens:       {total_tokens + num_input_tokens + num_output_tokens}")
-
-
