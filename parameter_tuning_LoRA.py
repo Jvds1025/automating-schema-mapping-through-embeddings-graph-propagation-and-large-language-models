@@ -9,13 +9,10 @@ import pandas as pd
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
-
 train_augmented = pd.read_csv("trainingset_.csv")
 val_augmented = pd.read_csv("validationset_.csv")
 
-
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3-Embedding-4B")
-
 
 class SchemaPairsDataset(Dataset):
     def __init__(self, pairs, tokenizer, max_length=64):
@@ -48,7 +45,6 @@ class SchemaPairsDataset(Dataset):
             "attention_mask_tgt": tgt_enc["attention_mask"].squeeze(0),
             "label": torch.tensor(int(label), dtype=torch.float)
         }
-
 
 # Loss function
 def cosine_loss(batch, model):
