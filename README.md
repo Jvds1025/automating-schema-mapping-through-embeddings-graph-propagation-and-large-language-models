@@ -26,7 +26,8 @@ This repository contains the code developed for the thesis **“Automating Schem
 
 ## Notes
 
-* The repository enables reproduction of the full pipeline: embedding fine-tuning, candidate generation, graph-based similarity refinement, LLM-based inference, and evaluation metrics.  
+* The repository enables reproduction of the full pipeline: embedding fine-tuning, candidate generation, graph-based similarity refinement, LLM-based inference, and evaluation metrics.
+* At present, the code outputs results using print statements. You are required to update the implementation to store the results in a persistent format, such as a CSV document.
 
 ---
 
