@@ -8,7 +8,6 @@ import psutil, os, torch
 
 start_time = time.time()
 
-
 def print_peak_memory_usage(step_name=""):
     process = psutil.Process(os.getpid())
     # CPU peak memory is platform dependent; on Linux, can use rss peak from /proc
@@ -25,7 +24,6 @@ def print_peak_memory_usage(step_name=""):
 # Optional: reset GPU peak memory tracker after measuring
 if torch.cuda.is_available():
     torch.cuda.reset_peak_memory_stats()
-
 
 # Load model & tokenizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -139,9 +137,7 @@ def evaluate_predictions(pred_dict, df):
         return acc, prec, rec, f1
 
     return compute(TP1, FP1, FN1, TN1), compute(TP3, FP3, FN3, TN3)
-
-
-
+    
 # THRESHOLD TUNING
 endpoint_grid = np.arange(0.1, 0.95, 0.025)
 column_grid   = np.arange(0.1, 0.95, 0.025)
@@ -150,7 +146,6 @@ results = []
 
 for ep_t in endpoint_grid:
     for col_t in column_grid:
-
         filtered = []
 
         for i, src in enumerate(df["source"]):
@@ -207,4 +202,3 @@ print(best_top3)
 # Save results
 tuning_df.to_csv("threshold_tuning_results.csv", index=False)
 print("\nSaved full grid search to threshold_tuning_results.csv")
-
